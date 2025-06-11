@@ -1,27 +1,65 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, Award, Globe, Heart, Target, Eye, Shield, CheckCircle } from 'lucide-react';
+import { getTeamMembers } from '../firebase/firestore';
+
+interface TeamMember {
+  id: string;
+  name: string;
+  designation: string;
+  description: string;
+  image: string;
+  order: number;
+  visible: boolean;
+}
 
 export const About: React.FC = () => {
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTeamMembers();
+  }, []);
+
+  const fetchTeamMembers = async () => {
+    try {
+      const data = await getTeamMembers();
+      if (data && Array.isArray(data)) {
+        setTeamMembers(data.filter(member => member.visible).sort((a, b) => a.order - b.order));
+      } else {
+        // Default team members if no data exists
+        setTeamMembers([
+          {
+            id: '1',
+            name: 'Dr. Pavan Rathod',
+            designation: 'Founder & CEO',
+            description: 'Former medical college dean with 20+ years in medical education',
+            image: '/pavan.png',
+            order: 1,
+            visible: true
+          },
+          {
+            id: '2',
+            name: 'Dr. Abhishek Rathod',
+            designation: 'Head of Counseling',
+            description: 'Educational psychologist specializing in career guidance',
+            image: '/abhi.png',
+            order: 2,
+            visible: true
+          }
+        ]);
+      }
+    } catch (error) {
+      console.error('Error fetching team members:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const stats = [
     { number: '7+', label: 'Years Experience', icon: <Award className="w-8 h-8" /> },
     { number: '3750+', label: 'Students Placed', icon: <Users className="w-8 h-8" /> },
     { number: '50+', label: 'Partner Universities', icon: <Globe className="w-8 h-8" /> },
     { number: '100%', label: 'Visa Success Rate', icon: <Shield className="w-8 h-8" /> }
-  ];
-
-  const team = [
-    {
-      name: 'Dr. Pavan Rathod',
-      position: 'Founder & CEO',
-      image: '/pavan.png',
-      bio: 'Former medical college dean with 20+ years in medical education'
-    },
-    {
-      name: 'Dr. Abhishek Rathod',
-      position: 'Head of Counseling',
-      image: '/abhi.png',
-      bio: 'Educational psychologist specializing in career guidance'
-    }
   ];
 
   const values = [
@@ -173,26 +211,32 @@ export const About: React.FC = () => {
               are dedicated to your success.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {team.map((member, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 animate-scale-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-primary mb-2">{member.name}</h3>
-                  <p className="text-secondary font-medium mb-3">{member.position}</p>
-                  <p className="text-gray-600">{member.bio}</p>
+          {loading ? (
+            <div className="flex items-center justify-center h-32">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {teamMembers.map((member, index) => (
+                <div
+                  key={member.id}
+                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 animate-scale-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <img
+                    src={member.image || 'https://via.placeholder.com/300x300'}
+                    alt={member.name}
+                    className="w-full h-64 object-cover"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-primary mb-2">{member.name}</h3>
+                    <p className="text-secondary font-medium mb-3">{member.designation}</p>
+                    <p className="text-gray-600">{member.description}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

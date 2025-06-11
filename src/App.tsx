@@ -30,7 +30,9 @@ import { VideoManager } from './pages/admin/VideoManager';
 import { GalleryManager } from './pages/admin/GalleryManager';
 import { ContactManager } from './pages/admin/ContactManager';
 import { NotificationManager } from './pages/admin/NotificationManager';
-import { FAQManager } from './pages/admin/FAQManager';
+import { FAQsManager } from './pages/admin/FAQsManager';
+import { FeesManager } from './pages/admin/FeesManager';
+import { TeamManager } from './pages/admin/TeamManager';
 import { Settings } from './pages/admin/Settings';
 
 // Root layout component that includes ScrollToTop
@@ -75,9 +77,11 @@ const router = createBrowserRouter(
         <Route path="blog" element={<BlogManager />} />
         <Route path="videos" element={<VideoManager />} />
         <Route path="gallery" element={<GalleryManager />} />
+        <Route path="fees" element={<FeesManager />} />
+        <Route path="faqs" element={<FAQsManager />} />
+        <Route path="team" element={<TeamManager />} />
         <Route path="contact" element={<ContactManager />} />
         <Route path="notifications" element={<NotificationManager />} />
-        <Route path="faqs" element={<FAQManager />} />
         <Route path="settings" element={<Settings />} />
       </Route>
 

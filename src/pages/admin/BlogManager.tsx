@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Search, Calendar, User } from 'lucide-react';
+import { Plus, Edit, Trash2, Search, Calendar, User, Eye, AlertCircle } from 'lucide-react';
 import { getBlogPosts, addBlogPost, updateBlogPost, deleteBlogPost } from '../../firebase/firestore';
 
 interface BlogPost {
@@ -12,6 +12,7 @@ interface BlogPost {
   category: string;
   tags: string[];
   published: boolean;
+  sectionType: 'featured' | 'latest' | 'popular';
   createdAt?: any;
 }
 
@@ -29,7 +30,8 @@ export const BlogManager: React.FC = () => {
     image: '',
     category: '',
     tags: [],
-    published: false
+    published: false,
+    sectionType: 'latest'
   });
 
   useEffect(() => {
@@ -47,8 +49,44 @@ export const BlogManager: React.FC = () => {
     }
   };
 
+  const getSectionCounts = () => {
+    return {
+      featured: posts.filter(p => p.sectionType === 'featured').length,
+      latest: posts.filter(p => p.sectionType === 'latest').length,
+      popular: posts.filter(p => p.sectionType === 'popular').length
+    };
+  };
+
+  const validateSectionLimits = (sectionType: string, currentPostId?: string) => {
+    const counts = getSectionCounts();
+    
+    if (sectionType === 'featured' && counts.featured >= 1) {
+      const existingFeatured = posts.find(p => p.sectionType === 'featured' && p.id !== currentPostId);
+      if (existingFeatured) {
+        return `Only 1 featured post allowed. "${existingFeatured.title}" is currently featured.`;
+      }
+    }
+    
+    if (sectionType === 'popular' && counts.popular >= 6) {
+      const existingPopular = posts.filter(p => p.sectionType === 'popular' && p.id !== currentPostId);
+      if (existingPopular.length >= 6) {
+        return 'Maximum 6 popular posts allowed.';
+      }
+    }
+    
+    return null;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate section limits
+    const validationError = validateSectionLimits(formData.sectionType, editingPost?.id);
+    if (validationError) {
+      alert(validationError);
+      return;
+    }
+
     try {
       if (editingPost) {
         await updateBlogPost(editingPost.id!, formData);
@@ -88,7 +126,8 @@ export const BlogManager: React.FC = () => {
       image: '',
       category: '',
       tags: [],
-      published: false
+      published: false,
+      sectionType: 'latest'
     });
     setEditingPost(null);
     setShowModal(false);
@@ -98,6 +137,8 @@ export const BlogManager: React.FC = () => {
     post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     post.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const sectionCounts = getSectionCounts();
 
   if (loading) {
     return (
@@ -124,6 +165,48 @@ export const BlogManager: React.FC = () => {
         </button>
       </div>
 
+      {/* Section Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-blue-600">Featured Posts</p>
+              <p className="text-2xl font-bold text-blue-900">{sectionCounts.featured}</p>
+            </div>
+            <div className="text-blue-400">
+              <Eye className="w-8 h-8" />
+            </div>
+          </div>
+          <p className="text-xs text-blue-600 mt-1">Max: 1 post</p>
+        </div>
+        
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-green-600">Popular Posts</p>
+              <p className="text-2xl font-bold text-green-900">{sectionCounts.popular}</p>
+            </div>
+            <div className="text-green-400">
+              <User className="w-8 h-8" />
+            </div>
+          </div>
+          <p className="text-xs text-green-600 mt-1">Max: 6 posts</p>
+        </div>
+        
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Latest Articles</p>
+              <p className="text-2xl font-bold text-gray-900">{sectionCounts.latest}</p>
+            </div>
+            <div className="text-gray-400">
+              <Calendar className="w-8 h-8" />
+            </div>
+          </div>
+          <p className="text-xs text-gray-600 mt-1">Unlimited</p>
+        </div>
+      </div>
+
       {/* Search */}
       <div className="relative max-w-md">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -144,6 +227,7 @@ export const BlogManager: React.FC = () => {
               <tr>
                 <th className="text-left py-3 px-6 font-medium text-gray-900">Title</th>
                 <th className="text-left py-3 px-6 font-medium text-gray-900">Author</th>
+                <th className="text-left py-3 px-6 font-medium text-gray-900">Section</th>
                 <th className="text-left py-3 px-6 font-medium text-gray-900">Category</th>
                 <th className="text-left py-3 px-6 font-medium text-gray-900">Status</th>
                 <th className="text-left py-3 px-6 font-medium text-gray-900">Date</th>
@@ -167,6 +251,17 @@ export const BlogManager: React.FC = () => {
                     </div>
                   </td>
                   <td className="py-4 px-6 text-gray-900">{post.author}</td>
+                  <td className="py-4 px-6">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      post.sectionType === 'featured' 
+                        ? 'bg-blue-100 text-blue-800'
+                        : post.sectionType === 'popular'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-gray-100 text-gray-800'
+                    }`}>
+                      {post.sectionType}
+                    </span>
+                  </td>
                   <td className="py-4 px-6">
                     <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">
                       {post.category}
@@ -227,6 +322,31 @@ export const BlogManager: React.FC = () => {
                   required
                 />
               </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Section Type</label>
+                <select
+                  value={formData.sectionType}
+                  onChange={(e) => setFormData({ ...formData, sectionType: e.target.value as any })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  required
+                >
+                  <option value="latest">Latest Articles (Unlimited)</option>
+                  <option value="popular" disabled={sectionCounts.popular >= 6 && formData.sectionType !== 'popular'}>
+                    Popular Articles ({sectionCounts.popular}/6)
+                  </option>
+                  <option value="featured" disabled={sectionCounts.featured >= 1 && formData.sectionType !== 'featured'}>
+                    Featured (1 max) {sectionCounts.featured >= 1 ? '- FULL' : ''}
+                  </option>
+                </select>
+                {formData.sectionType === 'featured' && sectionCounts.featured >= 1 && !editingPost && (
+                  <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-700 flex items-center space-x-2">
+                    <AlertCircle className="w-4 h-4" />
+                    <span>Featured slot is occupied. Creating this will replace the current featured post.</span>
+                  </div>
+                )}
+              </div>
+              
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Excerpt</label>
                 <textarea

@@ -17,7 +17,9 @@ import {
   X,
   User,
   Moon,
-  Sun
+  Sun,
+  DollarSign,
+  Users
 } from 'lucide-react';
 
 const sidebarItems = [
@@ -25,9 +27,11 @@ const sidebarItems = [
   { icon: FileText, label: 'Blog Manager', path: '/admin/blog' },
   { icon: Video, label: 'Videos', path: '/admin/videos' },
   { icon: Image, label: 'Gallery', path: '/admin/gallery' },
+  { icon: DollarSign, label: 'Fees Manager', path: '/admin/fees' },
+  { icon: HelpCircle, label: 'FAQs Manager', path: '/admin/faqs' },
+  { icon: Users, label: 'Team Manager', path: '/admin/team' },
   { icon: Phone, label: 'Contact Info', path: '/admin/contact' },
   { icon: Bell, label: 'Notifications', path: '/admin/notifications' },
-  { icon: HelpCircle, label: 'FAQs', path: '/admin/faqs' },
   { icon: Settings, label: 'Settings', path: '/admin/settings' }
 ];
 

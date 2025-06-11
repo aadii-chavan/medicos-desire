@@ -8,7 +8,8 @@ import {
   getDoc,
   query,
   orderBy,
-  Timestamp
+  Timestamp,
+  setDoc
 } from 'firebase/firestore';
 import { db } from './config';
 
@@ -143,4 +144,28 @@ export const updateUsefulLink = async (id: string, link: any) => {
 
 export const deleteUsefulLink = async (id: string) => {
   return await deleteDoc(doc(db, 'usefulLinks', id));
+};
+
+// Fees Structure
+export const getFeesStructure = async () => {
+  const docRef = doc(db, 'settings', 'feesStructure');
+  const docSnap = await getDoc(docRef);
+  return docSnap.exists() ? docSnap.data() : null;
+};
+
+export const updateFeesStructure = async (feesData: any) => {
+  const docRef = doc(db, 'settings', 'feesStructure');
+  return await setDoc(docRef, feesData, { merge: true });
+};
+
+// Team Members
+export const getTeamMembers = async () => {
+  const docRef = doc(db, 'settings', 'teamMembers');
+  const docSnap = await getDoc(docRef);
+  return docSnap.exists() ? docSnap.data().members : null;
+};
+
+export const updateTeamMembers = async (members: any[]) => {
+  const docRef = doc(db, 'settings', 'teamMembers');
+  return await setDoc(docRef, { members }, { merge: true });
 };
