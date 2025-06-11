@@ -1,0 +1,146 @@
+import { 
+  collection, 
+  doc, 
+  getDocs, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
+  getDoc,
+  query,
+  orderBy,
+  Timestamp
+} from 'firebase/firestore';
+import { db } from './config';
+
+// Blog Posts
+export const getBlogPosts = async () => {
+  const q = query(collection(db, 'blogPosts'), orderBy('createdAt', 'desc'));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const addBlogPost = async (post: any) => {
+  return await addDoc(collection(db, 'blogPosts'), {
+    ...post,
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now()
+  });
+};
+
+export const updateBlogPost = async (id: string, post: any) => {
+  const docRef = doc(db, 'blogPosts', id);
+  return await updateDoc(docRef, {
+    ...post,
+    updatedAt: Timestamp.now()
+  });
+};
+
+export const deleteBlogPost = async (id: string) => {
+  return await deleteDoc(doc(db, 'blogPosts', id));
+};
+
+// Videos
+export const getVideos = async () => {
+  const q = query(collection(db, 'videos'), orderBy('createdAt', 'desc'));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const addVideo = async (video: any) => {
+  return await addDoc(collection(db, 'videos'), {
+    ...video,
+    createdAt: Timestamp.now()
+  });
+};
+
+export const deleteVideo = async (id: string) => {
+  return await deleteDoc(doc(db, 'videos', id));
+};
+
+// Gallery
+export const getGalleryImages = async () => {
+  const q = query(collection(db, 'gallery'), orderBy('createdAt', 'desc'));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const addGalleryImage = async (image: any) => {
+  return await addDoc(collection(db, 'gallery'), {
+    ...image,
+    createdAt: Timestamp.now()
+  });
+};
+
+export const deleteGalleryImage = async (id: string) => {
+  return await deleteDoc(doc(db, 'gallery', id));
+};
+
+// Contact Info
+export const getContactInfo = async () => {
+  const docRef = doc(db, 'settings', 'contact');
+  const docSnap = await getDoc(docRef);
+  return docSnap.exists() ? docSnap.data() : null;
+};
+
+export const updateContactInfo = async (contactInfo: any) => {
+  const docRef = doc(db, 'settings', 'contact');
+  return await updateDoc(docRef, contactInfo);
+};
+
+// FAQs
+export const getFAQs = async () => {
+  const q = query(collection(db, 'faqs'), orderBy('order', 'asc'));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const addFAQ = async (faq: any) => {
+  return await addDoc(collection(db, 'faqs'), faq);
+};
+
+export const updateFAQ = async (id: string, faq: any) => {
+  const docRef = doc(db, 'faqs', id);
+  return await updateDoc(docRef, faq);
+};
+
+export const deleteFAQ = async (id: string) => {
+  return await deleteDoc(doc(db, 'faqs', id));
+};
+
+// Notifications
+export const getNotifications = async () => {
+  const q = query(collection(db, 'notifications'), orderBy('createdAt', 'desc'));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const addNotification = async (notification: any) => {
+  return await addDoc(collection(db, 'notifications'), {
+    ...notification,
+    createdAt: Timestamp.now()
+  });
+};
+
+export const deleteNotification = async (id: string) => {
+  return await deleteDoc(doc(db, 'notifications', id));
+};
+
+// Useful Links
+export const getUsefulLinks = async () => {
+  const q = query(collection(db, 'usefulLinks'), orderBy('order', 'asc'));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const addUsefulLink = async (link: any) => {
+  return await addDoc(collection(db, 'usefulLinks'), link);
+};
+
+export const updateUsefulLink = async (id: string, link: any) => {
+  const docRef = doc(db, 'usefulLinks', id);
+  return await updateDoc(docRef, link);
+};
+
+export const deleteUsefulLink = async (id: string) => {
+  return await deleteDoc(doc(db, 'usefulLinks', id));
+};
