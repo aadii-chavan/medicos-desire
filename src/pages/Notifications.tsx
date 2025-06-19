@@ -134,173 +134,270 @@ const Notifications: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
-      {/* Sticky Header */}
-      <header className="sticky top-0 z-40 bg-white shadow-md flex items-center justify-between px-4 sm:px-8 py-4 border-b border-gray-200">
-        <div className="flex items-center gap-3">
-          <Bell className="w-7 h-7 text-primary animate-bounce" />
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">Medical Updates & Notifications</h1>
-          <Calendar className="w-6 h-6 text-gray-400 ml-2" />
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-primary via-primary-light to-secondary text-white py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute top-10 right-10 opacity-20">
+          <Bell className="w-32 h-32 animate-bounce-subtle" />
         </div>
-      </header>
-      {/* Filters & Search */}
-      <section className="bg-white px-4 sm:px-8 py-4 border-b border-gray-100 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        {/* Search Bar */}
-        <div className="flex-1 flex items-center gap-2 max-w-md w-full mx-auto md:mx-0">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Search updates (e.g. NEET PG, Visa update)"
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50 text-sm"
-            />
-          </div>
+        <div className="absolute bottom-10 left-10 opacity-20">
+          <Calendar className="w-24 h-24 animate-pulse" />
         </div>
-        {/* Sort Dropdown */}
-        <div className="flex items-center gap-2 w-full md:w-auto">
-          <Filter className="w-5 h-5 text-gray-400" />
-          <div className="relative w-full max-w-[180px]">
-            <select
-              value={sort}
-              onChange={e => setSort(e.target.value)}
-              className="appearance-none pl-3 pr-8 py-2 rounded-lg border border-gray-200 bg-gray-50 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-transparent w-full"
-            >
-              {sortOptions.map(opt => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
-            <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="animate-slide-up">
+            <Bell className="w-16 h-16 mx-auto mb-6 text-secondary animate-bounce" />
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">Stay Updated with the Latest</h1>
+            <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-secondary">in the Medical World</h2>
+            <p className="text-xl text-gray-200 max-w-3xl mx-auto mb-8">
+              Visa alerts, exam deadlines, scholarships & more - all in one place
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+              <button className="bg-secondary text-primary px-6 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-colors flex items-center justify-center space-x-2">
+                <Bell className="w-5 h-5" />
+                <span>Enable Notifications</span>
+              </button>
+              <button className="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition-all duration-300">
+                Subscribe to Updates
+              </button>
+            </div>
           </div>
         </div>
       </section>
-      {/* Highlight/Sticky Section */}
-      <div className="max-w-2xl mx-auto mt-6 mb-8 w-full px-2 sm:px-0">
-        <div className={`flex flex-col sm:flex-row items-center gap-3 rounded-xl border-l-8 p-4 shadow-md animate-flash ${urgentHighlight.color} border-red-400 w-full`}>
+
+      {/* Sticky Toolbar */}
+      <section className="sticky top-0 z-40 bg-white shadow-md border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+            {/* Search Bar */}
+            <div className="flex-1 flex items-center gap-2 max-w-md w-full">
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Search updates (e.g. NEET PG, Visa update)"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50 transition-all duration-200"
+                />
+              </div>
+            </div>
+
+            {/* Filter Tags */}
+            <div className="flex flex-wrap gap-2">
+              {['MBBS Abroad', 'Visa', 'Exams', 'NEET', 'Russia', 'Scholarships'].map(tag => (
+                <button
+                  key={tag}
+                  className="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-primary hover:text-white transition-all duration-200 transform hover:scale-105"
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+
+            {/* Sort Dropdown */}
+            <div className="flex items-center gap-2">
+              <Filter className="w-5 h-5 text-gray-400" />
+              <div className="relative">
+                <select
+                  value={sort}
+                  onChange={e => setSort(e.target.value)}
+                  className="appearance-none pl-3 pr-8 py-2 rounded-lg border border-gray-200 bg-gray-50 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-transparent"
+                >
+                  {sortOptions.map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Urgent Highlight Banner */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <div className={`flex items-center gap-4 rounded-xl border-l-8 p-4 shadow-lg animate-pulse ${urgentHighlight.color} border-red-400`}>
           <div className="flex-shrink-0">{urgentHighlight.icon}</div>
           <div className="flex-1">
-            <div className="flex flex-wrap items-center gap-2 mb-1">
-              <span className="font-bold text-base">{urgentHighlight.title}</span>
-              <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-red-200 text-red-700 border border-red-300 animate-pulse">{urgentHighlight.tag}</span>
-              <Flame className="w-4 h-4 text-orange-500 animate-bounce" />
+            <div className="flex items-center gap-2 mb-1">
+              <span className="font-bold text-lg">{urgentHighlight.title}</span>
+              <span className="px-2 py-1 rounded-full text-xs font-bold bg-red-200 text-red-700 border border-red-300 animate-bounce">{urgentHighlight.tag}</span>
+              <Flame className="w-5 h-5 text-orange-500 animate-bounce" />
             </div>
-            <p className="text-sm leading-snug">{urgentHighlight.message}</p>
+            <p className="text-sm">{urgentHighlight.message}</p>
           </div>
         </div>
       </div>
+
       {/* Announcement Banner for Pinned Notice */}
       {pinned && (
-        <div className="max-w-2xl mx-auto mb-6 w-full px-2 sm:px-0">
-          <div className="flex items-center gap-3 rounded-xl bg-yellow-100 border-l-8 border-yellow-400 p-4 shadow animate-fade-in">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+          <div className="flex items-center gap-4 rounded-xl bg-yellow-100 border-l-8 border-yellow-400 p-4 shadow-lg animate-fade-in">
             <Star className="w-6 h-6 text-yellow-500 animate-bounce" />
             <div className="flex-1">
               <span className="font-semibold text-yellow-900">Announcement:</span>
               <span className="ml-2 font-medium text-yellow-800">{pinned.title}</span>
-              <span className="ml-2 px-2 py-0.5 rounded-full text-xs font-bold bg-yellow-200 text-yellow-800 border border-yellow-300">{pinned.tag}</span>
+              <span className="ml-2 px-2 py-1 rounded-full text-xs font-bold bg-yellow-200 text-yellow-800 border border-yellow-300">{pinned.tag}</span>
             </div>
           </div>
         </div>
       )}
+
       {/* Push Notification Prompt */}
-      <div className="max-w-2xl mx-auto mb-8 w-full px-2 sm:px-0">
-        <div className="flex flex-col sm:flex-row items-center gap-3 rounded-xl bg-primary/10 border border-primary/30 p-4 shadow animate-fade-in">
-          <Bell className="w-6 h-6 text-primary animate-bounce mb-2 sm:mb-0" />
-          <div className="flex-1 text-center sm:text-left">
-            <span className="font-semibold text-primary block">Enable alerts for new notifications?</span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <div className="flex items-center gap-4 rounded-xl bg-primary/10 border border-primary/30 p-4 shadow-lg animate-fade-in">
+          <Bell className="w-6 h-6 text-primary animate-bounce" />
+          <div className="flex-1">
+            <span className="font-semibold text-primary">Enable alerts for new notifications?</span>
             <p className="text-xs text-gray-700 mt-1">Get instant updates when important medical news or deadlines are posted.</p>
           </div>
-          <div className="flex gap-2 mt-2 sm:mt-0">
-            <button className="bg-primary text-white px-4 py-1.5 rounded-lg font-medium text-xs hover:bg-primary-dark transition-colors">Enable</button>
-            <button className="bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg font-medium text-xs hover:bg-gray-300 transition-colors">Dismiss</button>
+          <div className="flex gap-2">
+            <button className="bg-primary text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-primary-dark transition-colors">Enable</button>
+            <button className="bg-gray-200 text-gray-700 px-3 py-2 rounded-lg font-medium text-sm hover:bg-gray-300 transition-colors">Dismiss</button>
           </div>
         </div>
       </div>
-      {/* Notifications Feed (Infinite Scroll) */}
-      <div className="max-w-2xl mx-auto mt-8 w-full px-2 sm:px-0">
-        <div className="space-y-4">
-          {filtered.slice(0, visibleCount).map((notif) => (
-            <div
-              key={notif.id}
-              className={`rounded-xl shadow-sm border border-gray-200 p-5 flex flex-col sm:flex-row sm:items-center gap-3 ${typeColors[notif.type]} transition-all duration-300 transform hover:shadow-lg hover:scale-[1.02] animate-fade-in w-full`}
-            >
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  {/* Animated icon for high-priority */}
-                  {notif.type === 'alert' || notif.type === 'urgent' ? (
-                    <span className="animate-bounce inline-block">
-                      <Flame className="w-5 h-5 text-red-500" />
-                    </span>
-                  ) : null}
-                  <h2 className="text-lg font-semibold cursor-pointer hover:underline text-primary mb-0.5">
-                    {notif.title}
-                  </h2>
-                </div>
-                <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <span className="text-xs text-gray-500 flex items-center">
-                    <Calendar className="w-4 h-4 mr-1" />
-                    {notif.date}
-                  </span>
-                  <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-bold border ${tagColors[notif.tag] || 'bg-gray-200 text-gray-700 border-gray-300'}`}>
-                    {notif.tag}
-                  </span>
-                  <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-bold border ${typeColors[notif.type]}`}>{notif.type.toUpperCase()}</span>
-                </div>
-                <p className="text-sm mb-2 line-clamp-2">{notif.message}</p>
-                <div className="flex items-center gap-3 mt-2">
-                  <button className="text-primary text-xs font-semibold hover:underline">Read More</button>
-                  {/* Share button with dropdown (UI only) */}
-                  <div className="relative group">
-                    <button className="flex items-center gap-1 text-gray-500 hover:text-primary text-xs font-medium">
-                      <Share2 className="w-4 h-4" /> Share
-                    </button>
-                    <div className="absolute left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-2 space-y-1 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all z-20 min-w-[120px]">
-                      <a href="#" className="flex items-center gap-2 text-xs text-gray-700 hover:text-primary">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" className="w-4 h-4" /> WhatsApp
-                      </a>
-                      <a href="#" className="flex items-center gap-2 text-xs text-gray-700 hover:text-primary">
-                        <MailIcon className="w-4 h-4" /> Email
-                      </a>
-                      <a href="#" className="flex items-center gap-2 text-xs text-gray-700 hover:text-primary">
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.47.69a4.3 4.3 0 0 0 1.88-2.37 8.59 8.59 0 0 1-2.72 1.04A4.28 4.28 0 0 0 16.11 4c-2.37 0-4.29 1.92-4.29 4.29 0 .34.04.67.11.99C7.69 9.13 4.07 7.38 1.64 4.7c-.37.64-.58 1.38-.58 2.17 0 1.5.76 2.82 1.92 3.6-.7-.02-1.36-.21-1.94-.53v.05c0 2.1 1.5 3.85 3.5 4.25-.36.1-.74.16-1.13.16-.28 0-.54-.03-.8-.08.54 1.7 2.1 2.94 3.95 2.97A8.6 8.6 0 0 1 2 19.54c-.65 0-1.28-.04-1.9-.11A12.13 12.13 0 0 0 6.29 21c7.55 0 11.68-6.26 11.68-11.68 0-.18-.01-.36-.02-.54A8.18 8.18 0 0 0 22.46 6z"/></svg> Twitter
-                      </a>
-                    </div>
-                  </div>
-                  {/* Bookmark button (UI only) */}
-                  <button className="ml-2 text-gray-400 hover:text-yellow-400 transition-colors" title="Bookmark">
-                    <Star className="w-5 h-5" />
-                  </button>
+
+      {/* Main Content - Notifications Feed */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar (Desktop Only) */}
+          <div className="hidden lg:block">
+            <div className="bg-white rounded-xl shadow-lg p-6 sticky top-32">
+              <h3 className="text-lg font-semibold text-primary mb-4">Quick Filters</h3>
+              <div className="space-y-3">
+                {Object.keys(tagColors).map(tag => (
+                  <label key={tag} className="flex items-center space-x-2 cursor-pointer">
+                    <input type="checkbox" className="rounded border-gray-300 text-primary focus:ring-primary" />
+                    <span className="text-sm text-gray-700">{tag}</span>
+                  </label>
+                ))}
+              </div>
+              
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <h4 className="font-semibold text-gray-900 mb-3">Subscribe</h4>
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input type="checkbox" className="rounded border-gray-300 text-primary focus:ring-primary" />
+                  <span className="text-sm text-gray-700">Email notifications</span>
+                </label>
+              </div>
+
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <h4 className="font-semibold text-gray-900 mb-3">Calendar View</h4>
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <Calendar className="w-full h-32 text-gray-400" />
                 </div>
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* Notifications Feed */}
+          <div className="lg:col-span-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filtered.slice(0, visibleCount).map((notif, index) => (
+                <div
+                  key={notif.id}
+                  className={`rounded-xl shadow-lg border border-gray-200 p-6 ${typeColors[notif.type]} transition-all duration-300 transform hover:shadow-xl hover:scale-[1.02] animate-fade-in`}
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      {/* Animated icon for high-priority */}
+                      {notif.type === 'alert' || notif.type === 'urgent' ? (
+                        <span className="animate-bounce">
+                          <Flame className="w-5 h-5 text-red-500" />
+                        </span>
+                      ) : null}
+                      <h3 className="text-lg font-semibold cursor-pointer hover:underline text-primary">
+                        {notif.title}
+                      </h3>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`px-2 py-1 rounded-full text-xs font-bold border ${tagColors[notif.tag] || 'bg-gray-200 text-gray-700 border-gray-300'}`}>
+                        {notif.tag}
+                      </span>
+                      <span className={`px-2 py-1 rounded-full text-xs font-bold border ${typeColors[notif.type]}`}>{notif.type.toUpperCase()}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
+                    <Calendar className="w-4 h-4" />
+                    <span>{notif.date}</span>
+                  </div>
+                  
+                  <p className="text-sm mb-4 line-clamp-3">{notif.message}</p>
+                  
+                  <div className="flex items-center justify-between">
+                    <button className="text-primary text-sm font-semibold hover:underline">Read More</button>
+                    <div className="flex items-center gap-2">
+                      {/* Share button with dropdown (UI only) */}
+                      <div className="relative group">
+                        <button className="flex items-center gap-1 text-gray-500 hover:text-primary text-xs font-medium">
+                          <Share2 className="w-4 h-4" /> Share
+                        </button>
+                        <div className="absolute bottom-full right-0 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg p-2 space-y-1 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all z-20 min-w-[120px]">
+                          <a href="#" className="flex items-center gap-2 text-xs text-gray-700 hover:text-primary">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" className="w-4 h-4" /> WhatsApp
+                          </a>
+                          <a href="#" className="flex items-center gap-2 text-xs text-gray-700 hover:text-primary">
+                            <MailIcon className="w-4 h-4" /> Email
+                          </a>
+                          <a href="#" className="flex items-center gap-2 text-xs text-gray-700 hover:text-primary">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.47.69a4.3 4.3 0 0 0 1.88-2.37 8.59 8.59 0 0 1-2.72 1.04A4.28 4.28 0 0 0 16.11 4c-2.37 0-4.29 1.92-4.29 4.29 0 .34.04.67.11.99C7.69 9.13 4.07 7.38 1.64 4.7c-.37.64-.58 1.38-.58 2.17 0 1.5.76 2.82 1.92 3.6-.7-.02-1.36-.21-1.94-.53v.05c0 2.1 1.5 3.85 3.5 4.25-.36.1-.74.16-1.13.16-.28 0-.54-.03-.8-.08.54 1.7 2.1 2.94 3.95 2.97A8.6 8.6 0 0 1 2 19.54c-.65 0-1.28-.04-1.9-.11A12.13 12.13 0 0 0 6.29 21c7.55 0 11.68-6.26 11.68-11.68 0-.18-.01-.36-.02-.54A8.18 8.18 0 0 0 22.46 6z"/></svg> Twitter
+                          </a>
+                        </div>
+                      </div>
+                      {/* Bookmark button (UI only) */}
+                      <button className="text-gray-400 hover:text-yellow-400 transition-colors" title="Bookmark">
+                        <Star className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Load More Button */}
+            {visibleCount < filtered.length && (
+              <div className="flex justify-center mt-8">
+                <button
+                  onClick={handleLoadMore}
+                  className="px-8 py-3 rounded-lg bg-primary text-white font-semibold shadow-lg hover:bg-primary-dark transition-colors transform hover:scale-105"
+                >
+                  Load More Updates
+                </button>
+              </div>
+            )}
+
+            {/* No Results */}
+            {filtered.length === 0 && (
+              <div className="text-center py-12">
+                <Bell className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">No notifications found</h3>
+                <p className="text-gray-500">Try adjusting your search or filters</p>
+              </div>
+            )}
+          </div>
         </div>
-        {/* Infinite Scroll Load More Button */}
-        {visibleCount < filtered.length && (
-          <div className="flex justify-center mt-6">
-            <button
-              onClick={handleLoadMore}
-              className="px-6 py-2 rounded-lg bg-primary text-white font-semibold shadow hover:bg-primary-dark transition-colors"
-            >
-              Load More
+      </div>
+
+      {/* Sticky Bottom Bar (Mobile Only) */}
+      <div className="fixed bottom-0 left-0 w-full z-50 lg:hidden">
+        <div className="bg-white shadow-lg border-t border-gray-200 px-4 py-3">
+          <div className="flex justify-around items-center">
+            <button className="flex flex-col items-center text-primary hover:text-primary-dark focus:outline-none">
+              <Search className="w-6 h-6 mb-1" />
+              <span className="text-xs font-medium">Search</span>
+            </button>
+            <button className="flex flex-col items-center text-primary hover:text-primary-dark focus:outline-none">
+              <Bell className="w-6 h-6 mb-1" />
+              <span className="text-xs font-medium">Subscribe</span>
+            </button>
+            <button className="flex flex-col items-center text-primary hover:text-primary-dark focus:outline-none">
+              <Download className="w-6 h-6 mb-1" />
+              <span className="text-xs font-medium">Downloads</span>
             </button>
           </div>
-        )}
-      </div>
-      {/* Sticky Bottom Action Bar (Mobile Only) */}
-      <div className="fixed bottom-0 left-0 w-full z-40 sm:hidden pointer-events-none">
-        <div className="max-w-2xl mx-auto flex justify-around items-center bg-white rounded-t-2xl shadow-lg p-3 m-2 pointer-events-auto border border-gray-200">
-          <button className="flex flex-col items-center text-primary hover:text-primary-dark focus:outline-none">
-            <Search className="w-6 h-6 mb-1" />
-            <span className="text-xs font-medium">Search</span>
-          </button>
-          <button className="flex flex-col items-center text-primary hover:text-primary-dark focus:outline-none">
-            <Bell className="w-6 h-6 mb-1" />
-            <span className="text-xs font-medium">Subscribe</span>
-          </button>
-          <button className="flex flex-col items-center text-primary hover:text-primary-dark focus:outline-none">
-            <Download className="w-6 h-6 mb-1" />
-            <span className="text-xs font-medium">Downloads</span>
-          </button>
         </div>
       </div>
     </div>
